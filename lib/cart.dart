@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'payment.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_cart/flutter_cart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AllCart extends StatefulWidget {
   
@@ -12,13 +15,24 @@ class AllCart extends StatefulWidget {
 class _AllCartState extends State<AllCart> {
   
   var cart = FlutterCart();
-  
+
+  /*void _product(){
+    List menu = [];
+      for (int i = 0; i < cart.cartItem.length; i++){
+        menu.add({
+        "item": cart.cartItem.toList()[i].productId,
+        "price": cart.cartItem.toList()[i].unitPrice,
+        "quantity": cart.cartItem.toList()[i].quantity,
+      });
+    }
+    print(menu);
+  }*/
+
   @override
   Widget build(BuildContext context) {
-
+   //_product();
     return Scaffold(
-      
-       backgroundColor: Color(0xffEED9B9),
+      backgroundColor: Color(0xffEED9B9),
       appBar: AppBar(
         title: Text('Your Cart',
           style: TextStyle(
@@ -64,7 +78,24 @@ class _AllCartState extends State<AllCart> {
                          "Confirm",
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PayMent())),
+                        onPressed: () async{
+                           Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => PayMent())); 
+                           List menu = [];
+                              for (int i = 0; i < cart.cartItem.length; i++){
+                              menu.add({
+                                "item": cart.cartItem.toList()[i].productId,
+                                "price": cart.cartItem.toList()[i].unitPrice,
+                                "qty": cart.cartItem.toList()[i].quantity,
+                              });
+                            }
+                            
+                          await FirebaseFirestore.instance.collection('getOrder').add({                              
+                              "Menu": FieldValue.arrayUnion(menu),
+                              "Total": cart.getTotalAmount(),
+                              "Date": DateTime.now(),
+                            });
+                         
+                        },
                         color: Color(0xff99DC79),
                       ),
                   ],

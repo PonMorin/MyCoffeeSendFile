@@ -131,7 +131,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 ),
                               )),
                         ),
-                       /* SizedBox(height: 30.0),
+                 /*       SizedBox(height: 30.0),
                     Center(
                       child: Container(
                           width: 600.0,

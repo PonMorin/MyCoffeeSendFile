@@ -1,7 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mycoffe/cash_bill.dart';
 import 'package:mycoffe/online_bank.dart';
-import 'cart.dart';
+import 'package:flutter_cart/flutter_cart.dart';
 
 class PayMent extends StatefulWidget {
   @override
@@ -9,13 +10,25 @@ class PayMent extends StatefulWidget {
 }
 
 class _PayMentState extends State<PayMent> {
+
+  var cart = FlutterCart();
+
   List<String> imgIcon = [
     "images/cash.png",
     "images/online.png",
   ];
 
+ /* void _product() {
+    List list = [];
+    for(var items in cart.cartItem)
+        list.add(items.productId) ;
+    print(list);
+  }*/
+
+
   @override
   Widget build(BuildContext context) {
+    //_product();
     return Scaffold(
       backgroundColor: Color(0xffEED9B9),
       appBar: AppBar(
@@ -94,15 +107,21 @@ class _PayMentState extends State<PayMent> {
 }
 
 Widget menuPay(String payMenu, String iconImg) {
+  var cart = FlutterCart();
+
+  
+  List list = [];
+    for(var items in cart.cartItem)
+        list.add(items.productId) ;
+    print(list);
+  
+
   return Padding(
       padding: EdgeInsets.all(16.0),
       child: GestureDetector(
-        /*  onTap: () { 
-                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => ChoiceScreen(menuImg: img, foodName: foodName, foodPrice: price,)
-                          )
-                        );
-                        },*/
+       /* onTap: () {
+          
+        },*/
         child: Column(children: <Widget>[
           Expanded(
             child: Row(
@@ -131,3 +150,4 @@ Widget menuPay(String payMenu, String iconImg) {
         ]),
       ));
 }
+

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:mycoffe/menu.dart';
 import 'package:flutter_cart/flutter_cart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
 class ChoiceScreen extends StatefulWidget {
   final menuImg;
   final foodName;
   final foodPrice;
-
+  
   ChoiceScreen({this.menuImg, this.foodName, this.foodPrice});
 
   @override
@@ -17,6 +19,7 @@ class ChoiceScreen extends StatefulWidget {
 class _ChoiceScreenState extends State<ChoiceScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
   int _qty = 1;
 
@@ -61,8 +64,20 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
       child: Container(
         height: 65.0,
         child: RaisedButton.icon(
-          onPressed: () {
-           _backtomenu();
+          onPressed: () { 
+            _backtomenu();
+            /*await FirebaseFirestore.instance.collection('customer').add({
+                'menu': widget.foodName.toList(),
+                'price': widget.foodPrice,
+                'qty': _qty,
+                //'note':Get.arguments['note'],
+             }).whenComplete(() {
+              Get.snackbar("Dev", 
+              "${Get.arguments[widget.foodName]}",
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM
+              );
+            });*/          
           },
           color: Color(0xff623B28),
           icon: Icon(
@@ -305,7 +320,7 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
       showDialog(
                 context: context,
                 builder: (context) {
-                  Future.delayed(Duration(seconds: 1), () {
+                  Future.delayed(Duration(seconds: 1), () {                   
                     cart.addToCart(productId: widget.foodName, unitPrice: widget.foodPrice, quantity: _qty);
                     Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {

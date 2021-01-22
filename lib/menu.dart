@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mycoffe/userProfile.dart';
+import 'Owner/ownerLogin.dart';
 import 'choice.dart';
 import 'package:mycoffe/choice.dart';
 import 'cart.dart';
@@ -109,11 +109,11 @@ class _MenuState extends State<Menu> {
               child:ListTile(
               onTap: () {
                   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_){
-                    return UserProfile();
+                    return OwnerLogin();
                   }));
               },
               leading: Icon(Icons.person),
-              title:Text("Profile",
+              title:Text("Owner",
                  style: TextStyle(
                       color: Color(0xff623B28),
                       fontFamily: "Roboto",
@@ -652,6 +652,7 @@ class _MenuState extends State<Menu> {
   }
 
   Future _signOut() async{
+    
     await _auth.signOut();
   }
   

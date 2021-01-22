@@ -12,11 +12,11 @@ class SampleClass {
 
 
   addToCart(dynamic _product) => {
-             message = cart.addToCart(
+            message = cart.addToCart(
             productId: _product.productId,
             unitPrice: _product.productPrice,
             quantity: _product.quantity,
-
+  
             uniqueCheck: _product.selectedProductType,
 
             productDetailsObject: _product),

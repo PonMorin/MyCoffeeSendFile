@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Product {
   static const NAME = "name";
   static const PRICE = "price";
-  static const IMAGE = "image";
+  static const IMGURL = "imageurl";
 
   String _name;
   int _price;
@@ -18,6 +18,6 @@ class Product {
     Map data = snapshot.data();
     _name = data[NAME];
     _price = data[PRICE];
-    _img = data[IMAGE];
+    _img = data[IMGURL];
   }
 }
