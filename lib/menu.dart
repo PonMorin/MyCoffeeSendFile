@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'Owner/ownerLogin.dart';
 import 'choice.dart';
 import 'package:mycoffe/choice.dart';
 import 'cart.dart';
@@ -105,24 +104,7 @@ class _MenuState extends State<Menu> {
               ),
             ),
              SizedBox(height: 12.0,),
-            GestureDetector(
-              child:ListTile(
-              onTap: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_){
-                    return OwnerLogin();
-                  }));
-              },
-              leading: Icon(Icons.person),
-              title:Text("Owner",
-                 style: TextStyle(
-                      color: Color(0xff623B28),
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.0
-                      ),
-              )
-             )
-            ),
+          
 
              SizedBox(height: 2.0,),
             GestureDetector(
@@ -167,7 +149,7 @@ class _MenuState extends State<Menu> {
               )
              )
             ),
-            SizedBox(height: 330.0),
+            SizedBox(height: 208.0),
             Center(
               child: Container(
                 height: 210.0,
@@ -253,9 +235,9 @@ class _MenuState extends State<Menu> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 6.0, vertical: 1.0),
                   child: Container(
-                    padding: EdgeInsets.all(20.0),
+                    padding:  EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 20.0),
                     height: 200,
-                    width: 190,
+                    width: 168,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16)),
@@ -263,9 +245,9 @@ class _MenuState extends State<Menu> {
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(20.0),
+                  padding: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 20.0),
                   height: 200,
-                  width: 190,
+                  width: 168,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16)),
@@ -279,19 +261,19 @@ class _MenuState extends State<Menu> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 6.0, vertical: 1.0),
                   child: Container(
-                    padding: EdgeInsets.all(20.0),
+                    padding:  EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 20.0),
                     height: 200,
-                    width: 190,
+                    width: 168,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(16)),
-                    child: foodCard(imgFood[12], "Chocolate Cold", 35),
+                    child: foodCard(imgFood[12], "Chocolate", 35),
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.all(20.0),
+                  padding: EdgeInsets.fromLTRB(20.0, 20.0, 0.0, 20.0),
                   height: 200,
-                  width: 190,
+                  width: 168,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16)),

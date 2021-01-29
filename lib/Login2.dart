@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mycoffe/forgetpassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:mycoffe/menuDynamic.dart';
+import 'package:mycoffe/menuDynamicV2.dart';
+import 'package:mycoffe/menuDynamicV3.dart';
+import 'package:mycoffe/menuDynamicV4.dart';
 import 'signup.dart';
 import 'menu.dart';
 
@@ -24,7 +28,7 @@ class _LoginPage2State extends State<LoginPage2> {
     return Scaffold(
         key: _scaffoldkey,
         backgroundColor: Color(0xffEED9B9),
-        body:Form(
+        body:SafeArea(child:Form(
         key: _formkey,
         child:Stack(children: [
           Container(
@@ -128,10 +132,10 @@ class _LoginPage2State extends State<LoginPage2> {
                               style: TextStyle(
                                   color: Color(0xff623B28),
                                   fontFamily: "Roboto",
-                                  fontSize: 12.0,
+                                  fontSize: 10.0,
                                   fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(width: 40.0),
+                            SizedBox(width: 12.0),
                             GestureDetector(
                                 onTap: () {
                                   Navigator.push(
@@ -151,7 +155,7 @@ class _LoginPage2State extends State<LoginPage2> {
                           ]),
                     ),
                     Container(
-                      padding: EdgeInsets.fromLTRB(148.0, 0.0, 0.0, 0.0),
+                      padding: EdgeInsets.fromLTRB(120.0, 0.0, 0.0, 0.0),
                       child: GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -223,7 +227,7 @@ class _LoginPage2State extends State<LoginPage2> {
                     Container(
                         height: 190.0, child: Image.asset("images/cup.png"))
                   ])))
-        ])));
+        ]))));
   }
 
   void _signinWithEmailPassword() async {
@@ -235,7 +239,7 @@ class _LoginPage2State extends State<LoginPage2> {
           await user.sendEmailVerification();
         }
         Navigator.of(context).push(MaterialPageRoute(builder: (_){
-          return Menu(user: user);
+          return MenuDynamic3(user: user);
         }));
     } catch (e) {
       _scaffoldkey.currentState.showSnackBar(SnackBar(

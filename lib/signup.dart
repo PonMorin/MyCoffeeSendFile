@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mycoffe/Login2.dart';
-import 'package:mycoffe/menu.dart';
+
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -14,12 +14,13 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _displayName = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TextEditingController _confirmedpasswordController = TextEditingController();
+  //TextEditingController _confirmedpasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Color(0xffEED9B9),
-        body: Form(
+        body: SafeArea(
+          child:Form(
             key: _formkey,
             child: Stack(children: [
               Container(
@@ -184,7 +185,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         Container(
                             height: 190.0, child: Image.asset("images/cup.png"))
                       ])))
-            ])));
+            ]))));
   }
 
   void _register() async {
@@ -196,7 +197,7 @@ class _SignUpPageState extends State<SignUpPage> {
         await user.sendEmailVerification();
       }
       await user.updateProfile(displayName: _displayName.text);
-      final user1 = _auth.currentUser;
+      //final user1 = _auth.currentUser;
       showDialog(
           context: context,
           builder: (context) {

@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:mycoffe/menu.dart';
 import 'package:flutter_cart/flutter_cart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
+import 'package:mycoffe/menuDynamic.dart';
+import 'package:mycoffe/menuDynamicV3.dart';
+import 'package:mycoffe/menuDynamicV4.dart';
 
 class ChoiceScreen extends StatefulWidget {
   final menuImg;
@@ -20,7 +22,11 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  var advice;
 
+  final allAdvice = new TextEditingController();
+
+  
   int _qty = 1;
 
   void _add() {
@@ -64,37 +70,31 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
       child: Container(
         height: 65.0,
         child: RaisedButton.icon(
-          onPressed: () { 
+          onPressed: () async{ 
             _backtomenu();
-            /*await FirebaseFirestore.instance.collection('customer').add({
-                'menu': widget.foodName.toList(),
-                'price': widget.foodPrice,
-                'qty': _qty,
-                //'note':Get.arguments['note'],
-             }).whenComplete(() {
-              Get.snackbar("Dev", 
-              "${Get.arguments[widget.foodName]}",
-              colorText: Colors.white,
-              snackPosition: SnackPosition.BOTTOM
-              );
-            });*/          
+          if(allAdvice.text.isNotEmpty){
+            await FirebaseFirestore.instance.collection('NoteAddvice').add({
+                'note': allAdvice.text,
+             });    
+          }
           },
           color: Color(0xff623B28),
           icon: Icon(
             Icons.shopping_cart,
-            size: 35,
+            size: 25,
             color: Colors.white,
           ),
-          label: Text("Add to Cart -${widget.foodPrice} ",
+          label: Text("Add to Cart",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 35,
+                fontSize: 25,
               )),
         ),
       ),
     ),
 
-      body: ListView(
+      body: SafeArea(
+        child:ListView(
         children: <Widget>[
           Stack(children: <Widget>[
             Center(
@@ -105,7 +105,7 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
                       color: Colors.white,
                       image: DecorationImage(
                           fit: BoxFit.contain,
-                          image: AssetImage(widget.menuImg)))),
+                          image: NetworkImage(widget.menuImg)))),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -122,7 +122,7 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
           ]),
           //  SizedBox(height: 20.0),
           Container(
-              height: 67.0,
+              height: 80.0,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
@@ -187,6 +187,7 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
           Container(
             height: 60.0,
             child: TextField(
+              controller: allAdvice,
               decoration: InputDecoration(
                   hintText: "  Ex. No Sugar", border: InputBorder.none),
             ),
@@ -230,7 +231,7 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
                           ),
                         ),
                         Text(
-                          "${widget.foodPrice} Bath",
+                          "${widget.foodPrice * _qty} Bath",
                           style: TextStyle(
                             fontSize: 25.0,
                             fontFamily: "Roboto",
@@ -285,12 +286,13 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
           )
         ],
       ),
+      ),
     );
   }
 
   Widget _boxQuantity(int qty) {
     return Container(
-      height: 70,
+      height: 60.0,
       width: 60,
       alignment: Alignment.center,
       margin: EdgeInsets.only(right: 10),
@@ -324,7 +326,7 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
                     cart.addToCart(productId: widget.foodName, unitPrice: widget.foodPrice, quantity: _qty);
                     Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {
-                return Menu(user: user3);
+                return MenuDynamic3(user: user3);
               }));
                   });
                   return AlertDialog(
@@ -336,7 +338,7 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
                       size: 95.0,
                     ),
                     content: Text(
-                      " Added To Your Cart  ",
+                      " Added To Cart  ",
                       style: TextStyle(
                         color: Color(0xff623B28),
                         fontFamily: "Roboto",
@@ -348,5 +350,8 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
                 });
               
     }
+
+
+     
  
 }

@@ -70,7 +70,8 @@ class _CashState extends State<Cash> {
           ),
         ),
       ),
-      body: ListView(
+      body: SafeArea(
+        child: ListView(
         children: <Widget>[
           Padding(padding: EdgeInsets.fromLTRB(0.0, 25.0, 0.0, 0.0)),
           Container(
@@ -114,7 +115,7 @@ class _CashState extends State<Cash> {
                     ),
                   ),
                   SizedBox(
-                    width: 175.0,
+                    width: 130.0,
                   ),
                   Text(
                     "Quantity",
@@ -145,7 +146,7 @@ class _CashState extends State<Cash> {
                     ),
                   ),
                   SizedBox(
-                    width: 226.0,
+                    width: 165.0,
                   ),
                   Text(
                     "Quantity",
@@ -174,7 +175,7 @@ class _CashState extends State<Cash> {
                     ),
                   ),
                   SizedBox(
-                    width: 209.0,
+                    width: 145.0,
                   ),
                   Text(
                     "Price",
@@ -223,7 +224,7 @@ class _CashState extends State<Cash> {
                   ),
                 ),
               ),
-              SizedBox(height: 180.0),
+              SizedBox(height: 160.0),
               Container(
                   child: Column(children: <Widget>[
                     Image.asset(
@@ -251,6 +252,7 @@ class _CashState extends State<Cash> {
                 )),*/
           )
         ],
+      ),
       ),
     );
   }

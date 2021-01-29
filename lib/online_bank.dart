@@ -77,6 +77,7 @@ class _OnlineState extends State<Online> {
                   bottomRight: Radius.circular(90.0),
                 )),
             height: 720.0,
+            width: double.infinity,
             child: Column(children: <Widget>[
               Center(child:Image.asset(
                 imgBill[1],
@@ -108,7 +109,7 @@ class _OnlineState extends State<Online> {
                     ),
                   ),
                   SizedBox(
-                    width: 175.0,
+                    width: 125.0,
                   ),
                   Text(
                     "Quantity",
@@ -139,7 +140,7 @@ class _OnlineState extends State<Online> {
                     ),
                   ),
                   SizedBox(
-                    width: 226.0,
+                    width: 160.0,
                   ),
                   Text(
                     "Quantity",
@@ -168,7 +169,7 @@ class _OnlineState extends State<Online> {
                     ),
                   ),
                   SizedBox(
-                    width: 209.0,
+                    width: 140.0,
                   ),
                   Text(
                     "Price",
