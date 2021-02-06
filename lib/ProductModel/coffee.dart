@@ -10,13 +10,11 @@ class AllCoffee{
 
   AllCoffee(this.image,this.name,this.price);
 
-  AllCoffee.fromMap(Map<String, dynamic> map){
-    image = map["image"];
-    name = map["name"];
-    price = map["price"];
-  }
   
- 
-
+AllCoffee.fromJson(Map<String, dynamic> json)
+      : image = json["image"],
+        name = json['name'],
+        price = json["price"];  
+  Map<String, dynamic> toJson() => {'image': image, 'name': name, 'price': price};
   
 }

@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mycoffe/forgetpassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mycoffe/menuDynamic.dart';
-import 'package:mycoffe/menuDynamicV2.dart';
-import 'package:mycoffe/menuDynamicV3.dart';
 import 'package:mycoffe/menuDynamicV4.dart';
 import 'signup.dart';
-import 'menu.dart';
+
 
 class LoginPage2 extends StatefulWidget {
   @override
@@ -15,6 +12,7 @@ class LoginPage2 extends StatefulWidget {
 
 class _LoginPage2State extends State<LoginPage2> {
   bool check = false;
+  bool statusRedEye = true;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final TextEditingController _emailController = TextEditingController();
@@ -32,7 +30,6 @@ class _LoginPage2State extends State<LoginPage2> {
         key: _formkey,
         child:Stack(children: [
           Container(
-              //height: double.infinity,
               width: double.infinity,
               child: SingleChildScrollView(
                   physics: AlwaysScrollableScrollPhysics(),
@@ -99,9 +96,17 @@ class _LoginPage2State extends State<LoginPage2> {
                               ]),
                           child: ListTile(
                             title: TextFormField(
-                              obscureText: true,
+                              obscureText: statusRedEye,
                               controller: _passwordController,
                               decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    icon: statusRedEye ? Icon(Icons.remove_red_eye_sharp) : Icon(Icons.remove_red_eye_outlined), 
+                                    onPressed: (){
+                                      setState(() {
+                                         statusRedEye = !statusRedEye;
+                                      });
+                                    }
+                                  ),
                                   hintText: "password",
                                   border: InputBorder.none),
                               validator: (String val){
@@ -115,7 +120,7 @@ class _LoginPage2State extends State<LoginPage2> {
                     ),
                     SizedBox(height: 10.0),
                     Container(
-                      child: Row(
+                      child: Wrap(
                           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Checkbox(
@@ -127,7 +132,8 @@ class _LoginPage2State extends State<LoginPage2> {
                                 });
                               },
                             ),
-                            Text(
+                          Padding(padding: EdgeInsets.only(top:15.0),
+                            child: Text(
                               'Remember account',
                               style: TextStyle(
                                   color: Color(0xff623B28),
@@ -135,27 +141,32 @@ class _LoginPage2State extends State<LoginPage2> {
                                   fontSize: 10.0,
                                   fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(width: 12.0),
-                            GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ForgotPassword()));
-                                },
-                                child: Text(
-                                  "Forgot Password?",
-                                  style: TextStyle(
-                                      color: Color(0xff623B28),
-                                      fontFamily: "Roboto",
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.bold),
-                                )),
+                          ),
+                            
+                            
+                            Padding(
+                              padding: const EdgeInsets.only(left:60.0, top: 15.0),
+                              child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ForgotPassword()));
+                                  },
+                                  child: Text(
+                                    "Forgot Password?",
+                                    style: TextStyle(
+                                        color: Color(0xff623B28),
+                                        fontFamily: "Roboto",
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.bold),
+                                  )),
+                            ),
                           ]),
                     ),
                     Container(
-                      padding: EdgeInsets.fromLTRB(120.0, 0.0, 0.0, 0.0),
+                      padding: EdgeInsets.fromLTRB(170.0, 0.0, 0.0, 0.0),
                       child: GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -198,32 +209,7 @@ class _LoginPage2State extends State<LoginPage2> {
                       child: Container(
                           height: 3.0, width: 450.0, color: Color(0xff623B28)),
                     ),
-                    SizedBox(height: 10.0),
-                    /*Text(
-                      "OR",
-                      style: TextStyle(
-                          color: Color(0xff623B28),
-                          fontFamily: "Roboto",
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
-                    ),*/
-                    SizedBox(height: 10.0),
-                  /*  Container(
-                        height: 60.0,
-                        padding: EdgeInsets.fromLTRB(55.0, 0.0, 0.0, 0.0),
-                        child: Row(
-                          children: <Widget>[
-                             Image.asset("images/facebook_brown.png"),
-                            SizedBox(width: 82.0),
-                            GestureDetector(
-                             child:Image.asset("images/google.png"),
-                             onTap: () {
-                               _signinWithGoogle();
-                             },
-                            )
-                          ],
-                        )),*/
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 40.0),
                     Container(
                         height: 190.0, child: Image.asset("images/cup.png"))
                   ])))
@@ -239,7 +225,7 @@ class _LoginPage2State extends State<LoginPage2> {
           await user.sendEmailVerification();
         }
         Navigator.of(context).push(MaterialPageRoute(builder: (_){
-          return MenuDynamic3(user: user);
+          return MenuDynamic4(user: user,);
         }));
     } catch (e) {
       _scaffoldkey.currentState.showSnackBar(SnackBar(

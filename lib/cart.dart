@@ -1,31 +1,34 @@
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cart/model/cart_model.dart';
 import 'payment.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:flutter_cart/flutter_cart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'menuDynamicV4.dart';
 class AllCart extends StatefulWidget {
+  final User user;
+
+  const AllCart({Key key, this.user}) : super(key: key);
   @override
   _AllCartState createState() => _AllCartState();
 }
 
 class _AllCartState extends State<AllCart> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  
+
   var cart = FlutterCart();
 
-  int _counter = 0;
+  final userName = new TextEditingController();
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
+ 
   @override
   Widget build(BuildContext context) {
-    //_product();
     return Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.white /*Color(0xffEED9B9)*/,
         appBar: AppBar(
           title: Text('Your Cart',
@@ -35,7 +38,7 @@ class _AllCartState extends State<AllCart> {
               )),
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              _backtoMenu();
             },
             icon: Icon(Icons.arrow_back),
             color: Color(0xff623B28),
@@ -54,7 +57,6 @@ class _AllCartState extends State<AllCart> {
           elevation: 0.0,
         ),
         bottomNavigationBar: BottomAppBar(
-          //color: Color(0xffEED9B9),
           child: Container(
             height: 65.0,
             child: RaisedButton.icon(
@@ -63,6 +65,24 @@ class _AllCartState extends State<AllCart> {
                   context: context,
                   type: AlertType.warning,
                   title: "Are You Sure",
+                  // content: Form(
+                  //   child: Column(
+                  //     mainAxisSize: MainAxisSize.min,
+                  //     children: [
+                  //       TextFormField(
+                  //         controller: userName,
+                  //         decoration: InputDecoration(
+                  //             hintText: "Please Enter Yourname"),
+                  //         validator: (String val) {
+                  //           if (val.isEmpty) {
+                  //             return ("Enter name");
+                  //           }
+                  //           return null;
+                  //         },
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
                   buttons: [
                     DialogButton(
                       child: Text(
@@ -78,7 +98,6 @@ class _AllCartState extends State<AllCart> {
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                       onPressed: () async {
-                        _incrementCounter;
                         if (cart.cartItem.isNotEmpty) {
                           List menu = [];
                           for (int i = 0; i < cart.cartItem.length; i++) {
@@ -86,6 +105,8 @@ class _AllCartState extends State<AllCart> {
                               "item": cart.cartItem.toList()[i].productId,
                               "price": cart.cartItem.toList()[i].unitPrice,
                               "qty": cart.cartItem.toList()[i].quantity,
+                              "size": cart.cartItem.toList()[i].uniqueCheck,
+                              "note": cart.cartItem.toList()[i].productDetails,
                             });
                           }
                           await FirebaseFirestore.instance
@@ -93,15 +114,18 @@ class _AllCartState extends State<AllCart> {
                               .add({
                             "Menu": FieldValue.arrayUnion(menu),
                             "Total": cart.getTotalAmount(),
-                            "Queue": _counter,
-                            "Date": DateTime.now(),
+                            // "Date": DateTime.now(),
+                            "User": widget.user.displayName,
+                            // "Email":widget.user.email,
                           });
-                          cart.cartItem.clear();
+                          //cart.cartItem.clear();
+                          //userName.clear();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      PayMent()));
                         }
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => PayMent()));
                       },
                       color: Color(0xff99DC79),
                     ),
@@ -114,7 +138,7 @@ class _AllCartState extends State<AllCart> {
                 size: 25,
                 color: Colors.white,
               ),
-              label: Text("PURCHASE",
+              label: Text("PURCHASE(Totoal:${cart.getTotalAmount()})",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 25,
@@ -125,16 +149,6 @@ class _AllCartState extends State<AllCart> {
         body: SafeArea(
             child: ListView(children: <Widget>[
           Container(
-            /*  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:  BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0),
-                        bottomLeft: Radius.circular(30.0),
-                        bottomRight: Radius.circular(30.0),
-                  )
-                ),*/
-            //height: 800,
             width: double.infinity,
             child: Column(children: <Widget>[
               Padding(
@@ -163,7 +177,6 @@ class _AllCartState extends State<AllCart> {
                     ]),
               ),
               SizedBox(height: 5.0),
-
               Container(
                 padding: EdgeInsets.fromLTRB(33.0, 0.0, 30.0, 0.0),
                 child: Row(
@@ -197,65 +210,15 @@ class _AllCartState extends State<AllCart> {
                           )),
                     ]),
               ),
-
-              /* ListView.builder(
-                         itemCount: cart.cartItem.length,
-                         itemBuilder: (context, index) {
-                           final item = cart.cartItem[index];
-                           return Dismissible(
-                             key: Key(item),
-              // Provide a function that tells the app
-              // what to do after an item has been swiped away.
-              onDismissed: (direction) {
-                // Remove the item from the data source.
-                setState(() {
-                  cart.cartItem.removeAt(index);
-                });
-                             child: ListTile(title: Text('$item')),
-                        );
-                         }
-                      ),*/
-
-              SizedBox(height: 450),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.0),
-                /*child:Container(
-                          decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:  BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0),
-                        bottomLeft: Radius.circular(30.0),
-                        bottomRight: Radius.circular(30.0),
-                  )
-                ),*/
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Total",
-                      style: TextStyle(
-                        fontSize: 25.0,
-                        fontFamily: "Roboto",
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff623B28),
-                      ),
-                    ),
-                    Text(
-                      "${cart.getTotalAmount()}",
-                      style: TextStyle(
-                        fontSize: 25.0,
-                        fontFamily: "Roboto",
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xff623B28),
-                      ),
-                    )
-                  ],
-                ),
-              )
-              //  )
             ]),
           )
         ])));
+  }
+
+  void _backtoMenu() async {
+    final user4 = _auth.currentUser;
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+      return MenuDynamic4(user: user4);
+    }));
   }
 }

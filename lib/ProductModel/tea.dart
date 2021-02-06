@@ -10,13 +10,10 @@ class Tea{
 
   Tea(this.image,this.name,this.price);
 
-  Tea.fromMap(Map<String, dynamic> map){
-    image = map["image"];
-    name = map["name"];
-    price = map["price"];
-  }
   
-  
-
-  
+Tea.fromJson(Map<String, dynamic> json)
+      : image = json["image"],
+        name = json['name'],
+        price = json["price"];  
+  Map<String, dynamic> toJson() => {'image': image, 'name': name, 'price': price};
 }

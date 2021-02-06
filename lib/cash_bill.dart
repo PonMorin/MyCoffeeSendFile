@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:mycoffe/menu.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_cart/flutter_cart.dart';
+import 'package:screenshot/screenshot.dart';
+import 'menuDynamicV4.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'dart:io';
 
 class Cash extends StatefulWidget {
+  final User user;
+
+  const Cash({Key key, this.user}) : super(key: key);
   @override
   _CashState createState() => _CashState();
 }
@@ -11,8 +17,11 @@ class Cash extends StatefulWidget {
 class _CashState extends State<Cash> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  GlobalKey imageKey = GlobalKey();
 
   var cart = FlutterCart();
+  File _imageFile;
+  ScreenshotController screenshotController = ScreenshotController();
 
   List<String> imgBill = [
     "images/coffee.png",
@@ -24,37 +33,47 @@ class _CashState extends State<Cash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key:  _scaffoldKey,
-      backgroundColor: Color(0xffEED9B9),
-      /*appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Center(child:Text('Payment', 
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: "Roboto",
-              color: Color(0xff623B28),
-            )),
-       /* leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(Icons.arrow_back),
-          color: Color(0xff623B28),*/
-        ),
+      key: _scaffoldKey,
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Color(0xffEED9B9),
+        iconTheme: IconThemeData(color: Color(0xff623B28)),
+        automaticallyImplyLeading: false,
         elevation: 0.0,
-      ),*/
+        actions: [
+          IconButton(
+            icon: Icon(Icons.cancel),
+            onPressed: () {
+              _backtomenu();
+              cart.cartItem.clear();
+            },
+          )
+        ],
+      ),
       bottomNavigationBar: BottomAppBar(
         //color: Color(0xffEED9B9),
         child: Container(
           height: 65.0,
           child: RaisedButton.icon(
             onPressed: () {
-              _screenShot();
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Menu(user: user,)),
-              );*/
+              _imageFile = null;
+              screenshotController
+                  .capture(delay: Duration(milliseconds: 10))
+                  .then((File image) async {
+                //print("Capture Done");
+                setState(() {
+                  _imageFile = image;
+                });
+                final result =
+                    await ImageGallerySaver.saveImage(image.readAsBytesSync());
+                print("File Saved to Gallery");
+              }).catchError((onError) {
+                print(onError);
+              });
+
+              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                content: Text("Screenshot Success"),
+              ));
             },
             color: Color(0xff623B28),
             icon: Icon(
@@ -71,198 +90,151 @@ class _CashState extends State<Cash> {
         ),
       ),
       body: SafeArea(
-        child: ListView(
+          child: ListView(
         children: <Widget>[
-          Padding(padding: EdgeInsets.fromLTRB(0.0, 25.0, 0.0, 0.0)),
-          Container(
-             decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(90.0),
-                  topRight: Radius.circular(90.0),
-                  bottomLeft: Radius.circular(90.0),
-                  bottomRight: Radius.circular(90.0),
-                )),
-            height: 720.0,
-            child: Column(children: <Widget>[
-              Center(child:Image.asset(
-                imgBill[1],
-                scale: 8.0,
-              ),),
-              Center(child:Text(
-                    "Payment Completed",
-                    style: TextStyle(
-                      fontFamily: "Roboto",
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff623B28),
-                    ),
-                  ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
-                child: Row(children: [
-                  SizedBox(
-                    width: 18.0,
-                  ),
-                  Text(
-                    "Item",
-                    style: TextStyle(
-                      fontFamily: "Roboto",
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff623B28),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 130.0,
-                  ),
-                  Text(
-                    "Quantity",
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff623B28),
-                    ),
-                  ),
-                ]),
-              ),
-              SizedBox(
-                height: 5.0,
-              ),
-              Container(
-                child: Row(children: [
-                  SizedBox(
-                    width: 50.0,
-                  ),
-                  Text(
-                    "Item",
-                    style: TextStyle(
-                      fontFamily: "Roboto",
-                      fontSize: 15.0,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff623B28),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 165.0,
-                  ),
-                  Text(
-                    "Quantity",
-                    style: TextStyle(
-                      fontSize: 15.0,
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff623B28),
-                    ),
-                  ),
-                ]),
-              ),
-              SizedBox(height: 30.0),
-              Container(
-                child: Row(children: [
-                  SizedBox(
-                    width: 40.0,
-                  ),
-                  Text(
-                    "Total",
-                    style: TextStyle(
-                      fontFamily: "Roboto",
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff623B28),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 145.0,
-                  ),
-                  Text(
-                    "Price",
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      fontFamily: "Roboto",
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff623B28),
-                    ),
-                  ),
-                ]),
-              ),
-              SizedBox(height: 70.0),
-              Container(
-                child: Text(
-                  "46",
-                  style: TextStyle(
-                    fontFamily: "Roboto",
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff623B28),
-                  ),
-                ),
-              ),
-              SizedBox(height: 15.0),
-              Container(
-                child: Text(
-                  "Queue 46",
-                  style: TextStyle(
-                    fontFamily: "Roboto",
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff623B28),
+          Center(
+              child: Column(
+            children: [
+              Screenshot(
+                controller: screenshotController,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0.0, 1.0, 0.0, 0.0),
+                  child: Container(
+                    child: Column(children: <Widget>[
+                      Center(
+                        child: Image.asset(
+                          imgBill[1],
+                          scale: 8.0,
+                        ),
+                      ),
+                      Center(
+                        child: Text(
+                          "Payment Completed",
+                          style: TextStyle(
+                            fontFamily: "Roboto",
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff623B28),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top:10.0),
+                        child: Center(
+                          
+                              child:Column(
+                                children: <Widget>[
+                                  for (var item in cart.cartItem)
+                                    Text(
+                                      "${item.productId} x${item.quantity}  ${item.unitPrice}",
+                                      style: TextStyle(
+                                          color: Color(0xff623B28),
+                                          fontSize: 15.0,
+                                          fontFamily: "Roboto",
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                ],
+                              ),
+                             
+                          
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 60.0),
+                        child: Center(
+                          child: Container(
+                            child: Text(
+                              "Total ${cart.getTotalAmount()}",
+                              style: TextStyle(
+                                fontFamily: "Roboto",
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff623B28),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50.0),
+                        child: Center(
+                          child: Container(
+                            child: Text(
+                              "${widget.user.displayName}",
+                              style: TextStyle(
+                                fontFamily: "Roboto",
+                                fontSize: 25.0,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xff623B28),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 15.0),
+                      Center(
+                        child: Container(
+                          child: Text(
+                            "โปรดแสดงหลักฐานก่อนรับสินค้า",
+                            style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xff623B28),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 15.0),
+                      Container(
+                        child: Text(
+                          "Thank you for purchase MYCOFFEE",
+                          style: TextStyle(
+                            fontFamily: "Roboto",
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff623B28),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 120.0),
+                      Container(
+                          child: Column(children: <Widget>[
+                        Image.asset(
+                          imgBill[0],
+                          width: 58.0,
+                        ),
+                        Text(
+                          " Mycoffee",
+                          style: TextStyle(
+                            fontFamily: "Roboto",
+                            fontSize: 25.0,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xff623B28),
+                          ),
+                        )
+                      ]))
+                    ]),
                   ),
                 ),
               ),
-              SizedBox(height: 15.0),
-              Container(
-                child: Text(
-                  "Thank you for purchase MYCOFFEE",
-                  style: TextStyle(
-                    fontFamily: "Roboto",
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff623B28),
-                  ),
-                ),
-              ),
-              SizedBox(height: 160.0),
-              Container(
-                  child: Column(children: <Widget>[
-                    Image.asset(
-                      imgBill[0],
-                      width: 100.0,
-                    ),
-                    
-                    Text(" Mycoffee",
-                  style: TextStyle(
-                    fontFamily: "Roboto",
-                    fontSize: 35.0,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff623B28),
-                  ),)
-                 
-                  ]))
-            ]),
-          /*  decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(90.0),
-                  topRight: Radius.circular(90.0),
-                  bottomLeft: Radius.circular(90.0),
-                  bottomRight: Radius.circular(90.0),
-                )),*/
-          )
+              // _imageFile != null ? Image.file(_imageFile) : Container(),
+            ],
+          ))
         ],
-      ),
-      ),
+      )),
     );
   }
 
-  void _screenShot() async {
-      final user2 = _auth.currentUser;
-              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-                return Menu(user: user2);
-              }));
-    }
+  _saved(File image) async {
+    final result = await ImageGallerySaver.saveImage(image.readAsBytesSync());
+    print("File Saved to Gallery");
+  }
 
-
+  void _backtomenu() async {
+    final user4 = _auth.currentUser;
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
+      return MenuDynamic4(user: user4);
+    }));
+  }
 }
